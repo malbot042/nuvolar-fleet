@@ -1,5 +1,4 @@
-from fleet.models import Aircraft, Airport
-from django.http import response
+from fleet.models import Aircraft, Airport, Flight
 from django.urls import reverse
 from django.contrib.auth.models import User
 
@@ -21,6 +20,9 @@ class AuthTokenTest(APITestCase):
 
 
 class AirportPostTest(AuthTokenTest):
+    """
+    Simple post for a new aiport
+    """
     def setUp(self) -> None:
         super().setUp()
         return self
@@ -38,6 +40,9 @@ class AirportPostTest(AuthTokenTest):
 
 
 class AirCraftDeleteTest(AuthTokenTest):
+    """
+    Simple Aircraft delete test
+    """
     def setUp(self) -> None:
         super().setUp()
         self.aircraft = Aircraft.objects.create(
@@ -58,6 +63,10 @@ class AirCraftDeleteTest(AuthTokenTest):
 
 
 class FlightErrorTest(AuthTokenTest):
+    """
+    Simple Flight Error test: check if we can add a flight
+    for a past date
+    """
     def setUp(self) -> None:
         super().setUp()
         self.airport = Airport.objects.create(icao='TEST')
@@ -83,3 +92,46 @@ class FlightErrorTest(AuthTokenTest):
             response.status_code,
             status.HTTP_400_BAD_REQUEST
         )
+
+
+class FlightFilterTest(AuthTokenTest):
+    """
+    Dummy Flight Test filter
+    """
+
+    def setUp(self) -> None:
+        super().setUp()
+
+        self.airport = Airport.objects.create(icao='TEST')
+        self.aircraft = Aircraft.objects.create(
+            serial_number='TEST',
+            manufacturer='TEST'
+        )
+
+        self.flight = Flight.objects.create(
+            departure_date='2012-01-01T00:00:00Z',
+            arrival_date='2012-01-02T00:00:00Z',
+            departure_airport=self.airport,
+            arrival_airport=self.airport
+        )
+
+    def test_filter_err(self):
+        url = reverse('flight-list')
+        url += '?departure_date=2020-01-01T00:00Z'
+        response = self.client.get(
+            url,
+            format='json'
+        )
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
+        self.assertEquals(response.json(),[])
+
+    def test_filter_ok(self):
+        url = reverse('flight-list')
+        url += '?departure_date=2012-01-01T00:00Z'
+        response = self.client.get(
+            url,
+            format='json'
+        )
+        data = response.json()
+        self.assertEquals(response.status_code, status.HTTP_200_OK)
+        self.assertEquals(len(data), 1)

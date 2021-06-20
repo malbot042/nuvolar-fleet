@@ -47,6 +47,26 @@ class FlightViewSet(viewsets.ModelViewSet):
     ]
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+
+        departure_airport = self.request.query_params.get('departure_airport')
+        arrival_airport = self.request.query_params.get('arrival_airport')
+
+        if departure_airport:
+            qs = qs.filter(departure_airport=departure_airport)
+        if arrival_airport:
+            qs = qs.filter(arrival_airport=arrival_airport)
+
+        departure_date = self.request.query_params.get('departure_date')
+        arrival_date = self.request.query_params.get('arrival_date')
+
+        if departure_date:
+            qs = qs.filter(departure_date__gte=departure_date)
+        if arrival_date:
+            qs = qs.filter(arrival_date__gte=arrival_date)
+
+        return qs
 
 class ReportViewSet(viewsets.ModelViewSet):
     http_method_names = ['get']
@@ -58,4 +78,22 @@ class ReportViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return None
+        qs = Flight.objects.all()
+
+        departure_airport = self.request.query_params.get('departure_airport')
+        arrival_airport = self.request.query_params.get('arrival_airport')
+
+        if departure_airport:
+            qs = qs.filter(departure_airport=departure_airport)
+        if arrival_airport:
+            qs = qs.filter(arrival_airport=arrival_airport)
+
+        departure_date = self.request.query_params.get('departure_date')
+        arrival_date = self.request.query_params.get('arrival_date')
+
+        if departure_date:
+            qs = qs.filter(departure_date__gte=departure_date)
+        if arrival_date:
+            qs = qs.filter(arrival_date__gte=arrival_date)
+
+        return qs
