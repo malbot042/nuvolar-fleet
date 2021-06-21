@@ -95,6 +95,38 @@ class FlightErrorTest(AuthTokenTest):
         )
 
 
+class FlightPostTest(AuthTokenTest):
+    """
+    Simple Flight Error test: check if we can add a flight
+    for a past date
+    """
+    def setUp(self) -> None:
+        super().setUp()
+        self.airport = Airport.objects.create(icao='TEST')
+        self.aircraft = Aircraft.objects.create(
+            serial_number='TEST',
+            manufacturer='TEST'
+        )
+        return self
+
+    def test_flight_post(self):
+        response = self.client.post(
+            reverse('flight-list'),
+            {
+                "departure_date": "2022-10-20T10:00",
+                "arrival_date": "2022-10-21T12:00",
+                "departure_airport": self.airport.id,
+                "arrival_airport": self.airport.id,
+                "aircraft": None
+            },
+            format='json'
+        )
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED
+        )
+
+
 class FlightFilterTest(AuthTokenTest):
     """
     Dummy Flight Test filter
