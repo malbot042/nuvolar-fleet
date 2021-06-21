@@ -7,9 +7,13 @@ from django.db import models
 
 class Airport(models.Model):
     """
-    Airport: ICAO code
+    Airport:
+        - ICAO code
     """
-    icao = models.CharField(max_length=4)
+    icao = models.CharField(
+        max_length=4,
+        unique=True
+    )
 
     def __str__(self):
         return f"{self.icao}"
@@ -17,7 +21,9 @@ class Airport(models.Model):
 
 class Aircraft(models.Model):
     """
-    Aircraft: serial number & manufacturer.
+    Aircraft:
+        - serial number
+        - manufacturer
     """
 
     serial_number = models.CharField(
@@ -35,8 +41,10 @@ class Aircraft(models.Model):
 class Flight(models.Model):
     """
     A flight is:
-        - A departure date and airport
-        - An arrival date and airport
+        - A departure date
+        - A departure airport
+        - An arrival date
+        - An arrival airport
     """
 
     departure_date = models.DateTimeField()
