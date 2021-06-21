@@ -1,3 +1,4 @@
+from django.utils import timezone
 from fleet.models import Aircraft, Airport, Flight
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -80,8 +81,8 @@ class FlightErrorTest(AuthTokenTest):
         response = self.client.post(
             reverse('flight-list'),
             {
-                "departure_date": "2020-06-20T10:00:00Z",
-                "arrival_date": "2020-06-21T12:00:00Z",
+                "departure_date": "2020-06-20T10:00",
+                "arrival_date": "2020-06-21T12:00",
                 "departure_airport": self.airport.id,
                 "arrival_airport": self.airport.id,
                 "aircraft": None
@@ -135,3 +136,49 @@ class FlightFilterTest(AuthTokenTest):
         data = response.json()
         self.assertEquals(response.status_code, status.HTTP_200_OK)
         self.assertEquals(len(data), 1)
+
+
+class ReportTest(AuthTokenTest):
+    """
+    Request a report test for a departure & arrival interval
+    """
+    def setUp(self) -> None:
+        super().setUp()
+        self.airport_1 = Airport.objects.create(icao='NU01')
+        self.airport_2 = Airport.objects.create(icao='NU02')
+        self.aircraft_1 = Aircraft.objects.create(
+            serial_number='NU001',
+            manufacturer='NUVOLAR'
+        )
+        self.flight = Flight.objects.create(
+            departure_airport=self.airport_1,
+            arrival_airport=self.airport_2,
+            departure_date=timezone.make_aware(
+                timezone.datetime(2012,1,1,0,0)
+            ),
+            arrival_date=timezone.make_aware(
+                timezone.datetime(2012,1,1,2,0)
+            ),
+            aircraft=self.aircraft_1
+        )
+        self.flight = Flight.objects.create(
+            departure_airport=self.airport_1,
+            arrival_airport=self.airport_2,
+            departure_date=timezone.make_aware(
+                timezone.datetime(2012,1,1,0,0)
+            ),
+            arrival_date=timezone.make_aware(
+                timezone.datetime(2012,1,1,2,0)
+            ),
+        )
+        return self
+
+    def test_report(self):
+        url = reverse('report-list')
+        url += '?departure_date=2012-01-01T00:00Z'
+        url += '?arrival_date=2012-01-31T00:00Z'
+        response = self.client.get(url, format='json')
+        data = response.json()
+        import ipdb; ipdb.set_trace()
+        total = data['NU01']['total']
+        self.assertEquals(total, 240)

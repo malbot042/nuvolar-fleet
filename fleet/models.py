@@ -63,6 +63,7 @@ class Flight(models.Model):
 
     def __str__(self):
         return \
-            f"{self.id}:"\
-            f"{self.departure_airport} {self.departure_date}"\
-            f"{self.arrival_airport} {self.arrival_date}"
+            f"{self.id} | " \
+            f"{self.departure_airport} : {self.departure_date} | " \
+            f"{self.arrival_airport} : {self.arrival_date} | " \
+            f"{self.aircraft}"
