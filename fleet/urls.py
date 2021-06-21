@@ -17,7 +17,7 @@ router.register(r'report', views.ReportViewSet, basename='report')
 urlpatterns = [
 
     # auth urls
-    #path('api-token-auth/', token_views.obtain_auth_token),
+    path('api-token-auth/', token_views.obtain_auth_token),
     # main nuvolar api urls
     path('', include(router.urls)),
 ]
