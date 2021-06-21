@@ -87,7 +87,6 @@ class ReportViewSet(viewsets.ModelViewSet):
         return qs
 
     def list(self, request):
-        # import ipdb; ipdb.set_trace()
         data = {}
         qs = self.get_queryset().order_by('id')
         for flight in qs:

@@ -179,6 +179,5 @@ class ReportTest(AuthTokenTest):
         url += '?arrival_date=2012-01-31T00:00Z'
         response = self.client.get(url, format='json')
         data = response.json()
-        import ipdb; ipdb.set_trace()
         total = data['NU01']['total']
         self.assertEquals(total, 240)
