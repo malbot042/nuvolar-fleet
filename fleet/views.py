@@ -108,7 +108,8 @@ class ReportViewSet(viewsets.ModelViewSet):
             else:
                 icao_flights['aircrafts'][aircraft] += delta_time
             icao_flights['total'] += delta_time
-        total = data[flight.departure_airport.icao]['total']
-        flights = data[flight.departure_airport.icao]['flights']
-        data[flight.departure_airport.icao]['average'] = total / flights
+        if qs:
+            total = data[flight.departure_airport.icao]['total']
+            flights = data[flight.departure_airport.icao]['flights']
+            data[flight.departure_airport.icao]['average'] = total / flights
         return Response(data)
