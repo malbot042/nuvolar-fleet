@@ -156,7 +156,7 @@ class FlightFilterTest(AuthTokenTest):
             format='json'
         )
         self.assertEquals(response.status_code, status.HTTP_200_OK)
-        self.assertEquals(response.json(),[])
+        self.assertEquals(response.json(), [])
 
     def test_filter_ok(self):
         url = reverse('flight-list')
@@ -186,10 +186,10 @@ class ReportTest(AuthTokenTest):
             departure_airport=self.airport_1,
             arrival_airport=self.airport_2,
             departure_date=timezone.make_aware(
-                timezone.datetime(2012,1,1,0,0)
+                timezone.datetime(2012, 1, 1, 0, 0)
             ),
             arrival_date=timezone.make_aware(
-                timezone.datetime(2012,1,1,2,0)
+                timezone.datetime(2012, 1, 1, 2, 0)
             ),
             aircraft=self.aircraft_1
         )
@@ -197,10 +197,10 @@ class ReportTest(AuthTokenTest):
             departure_airport=self.airport_1,
             arrival_airport=self.airport_2,
             departure_date=timezone.make_aware(
-                timezone.datetime(2012,1,1,0,0)
+                timezone.datetime(2012, 1, 1, 0, 0)
             ),
             arrival_date=timezone.make_aware(
-                timezone.datetime(2012,1,1,2,0)
+                timezone.datetime(2012, 1, 1, 2, 0)
             ),
         )
         return self

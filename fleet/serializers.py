@@ -32,7 +32,7 @@ class FlightSerializer(serializers.ModelSerializer):
                 self.initial_data['departure_date'],
                 "%Y-%m-%dT%H:%M:%S"
             )
-        except:
+        except Exception:
             naive_date = timezone.datetime.strptime(
                 self.initial_data['departure_date'],
                 "%Y-%m-%dT%H:%M"

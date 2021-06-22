@@ -65,6 +65,7 @@ class FlightViewSet(viewsets.ModelViewSet):
 
         return qs
 
+
 class ReportViewSet(viewsets.ModelViewSet):
     http_method_names = ['get']
     authentication_classes = [

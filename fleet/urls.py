@@ -31,13 +31,30 @@ router.register(r'flight', views.FlightViewSet)
 router.register(r'report', views.ReportViewSet, basename='report')
 
 urlpatterns = [
-    # swagger api
-    path('swagger(<format>\.json|\.yaml)', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     # auth urls
     path('api-token-auth/', token_views.obtain_auth_token),
-    path('accounts/login/', auth_views.LoginView.as_view(template_name = "admin/login.html")),
+    path(
+        'accounts/login/',
+        auth_views.LoginView.as_view(template_name="admin/login.html")
+    ),
+
     # main nuvolar api urls
     path('', include(router.urls)),
+
+    # swagger api docs
+    path(
+        'swagger(<format>)',
+        schema_view.without_ui(cache_timeout=0),
+        name='schema-json'
+    ),
+    path(
+        'swagger/',
+        schema_view.with_ui('swagger', cache_timeout=0),
+        name='schema-swagger-ui'
+    ),
+    path(
+        'redoc/',
+        schema_view.with_ui('redoc', cache_timeout=0),
+        name='schema-redoc'
+    ),
 ]
